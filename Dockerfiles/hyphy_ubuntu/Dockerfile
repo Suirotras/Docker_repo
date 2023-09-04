@@ -4,11 +4,12 @@ FROM ubuntu:jammy-20230804
 ### update, upgrade and install some build dependencies
 RUN apt-get update && apt-get upgrade -y && apt-get install -y build-essential zlib1g zlib1g-dev libcurl4-openssl-dev wget curl
 
-## set local time to Europe/Stockholm
+### set local time to Europe/Stockholm
 RUN CONTAINER_TIMEZONE="Europe/Stockholm" && \
     # Set timezone:
     ln -snf /usr/share/zoneinfo/$CONTAINER_TIMEZONE /etc/localtime && echo $CONTAINER_TIMEZONE > /etc/timezone
 
+### Set LOCALE
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y locales \
     && sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
