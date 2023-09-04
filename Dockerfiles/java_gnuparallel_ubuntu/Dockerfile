@@ -9,6 +9,15 @@ RUN CONTAINER_TIMEZONE="Europe/Stockholm" && \
     # Set timezone:
     ln -snf /usr/share/zoneinfo/$CONTAINER_TIMEZONE /etc/localtime && echo $CONTAINER_TIMEZONE > /etc/timezone
 
+### Set LOCALE
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y locales \
+    && sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
+    && dpkg-reconfigure --frontend=noninteractive locales \
+    && update-locale LANG=en_US.UTF-8
+ENV LANG en_US.UTF-8 
+ENV LC_ALL en_US.UTF-8
+
 ### Install R
 # update indices
 RUN apt-get update -qq && \
@@ -22,10 +31,6 @@ RUN apt-get update -qq && \
     add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/" && \
     # install R
     apt-get install -y --no-install-recommends r-base
-
-### edit .profile and .bashrc to include LOCALE variables
-RUN export LANG=en_US.UTF-8 && \
-    export LC_ALL=en_US.UTF-8
 
 ### add R repo
 RUN apt-get update -qq && add-apt-repository ppa:c2d4u.team/c2d4u4.0+
