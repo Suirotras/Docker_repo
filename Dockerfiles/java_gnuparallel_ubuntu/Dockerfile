@@ -40,7 +40,8 @@ RUN apt-get update && \
     # get R packages required for installation of other packages
     apt-get install -y r-cran-devtools && \
     # get R packages needed for 
-    apt-get install -y r-cran-tidyverse r-cran-magrittr r-cran-optparse r-cran-ape
+    apt-get install -y r-cran-tidyverse r-cran-magrittr r-cran-optparse r-cran-ape \
+    		       r-cran-foreach r-cran-jsonlite r-cran-doparallel
 
 ### install python
 RUN apt-get update && \
@@ -57,6 +58,8 @@ RUN pip install -U pip && \
 RUN apt-get update && \
     apt-get install -y parallel default-jre
 
+### install GNU awk
+RUN apt-get install -y gawk
 
 ENTRYPOINT ["tail", "-f", "/dev/null"]
 
