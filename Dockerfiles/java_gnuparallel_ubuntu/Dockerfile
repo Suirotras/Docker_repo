@@ -59,7 +59,7 @@ RUN apt-get update && \
     apt-get install -y parallel default-jre
 
 ### install GNU awk
-RUN apt-get install -y gawk
+RUN apt-get install -y gawk ssh
 
 ENTRYPOINT ["tail", "-f", "/dev/null"]
 
