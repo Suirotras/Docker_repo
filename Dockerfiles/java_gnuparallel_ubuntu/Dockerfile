@@ -2,7 +2,7 @@
 FROM ubuntu:jammy-20230804
 
 ### update, upgrade and install some build dependencies
-RUN apt-get update && apt-get upgrade -y && apt-get install -y build-essential zlib1g zlib1g-dev libcurl4-openssl-dev wget curl
+RUN apt-get update && apt-get upgrade -y && apt-get install -y build-essential zlib1g zlib1g-dev libcurl4-openssl-dev wget curl libpng-dev libfontconfig1-dev libxml2-dev libssl-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev
 
 ## set local time to Europe/Stockholm
 RUN CONTAINER_TIMEZONE="Europe/Stockholm" && \
@@ -30,18 +30,17 @@ RUN apt-get update -qq && \
     # add the R 4.0 repo from CRAN -- adjust 'focal' to 'groovy' or 'bionic' as needed
     add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/" && \
     # install R
-    apt-get install -y --no-install-recommends r-base
+    apt-get install -y --no-install-recommends r-base r-base-dev
 
 ### add R repo
 RUN apt-get update -qq && add-apt-repository ppa:c2d4u.team/c2d4u4.0+
 
+### create a directory for the R packages
+RUN mkdir /usr/lib/container_r_packages
+ENV R_LIBS=/usr/lib/container_r_packages
+
 ### add R packages
-RUN apt-get update && \
-    # get R packages required for installation of other packages
-    apt-get install -y r-cran-devtools && \
-    # get R packages needed for 
-    apt-get install -y r-cran-tidyverse r-cran-magrittr r-cran-optparse r-cran-ape \
-    		       r-cran-foreach r-cran-jsonlite r-cran-doparallel
+RUN R -e "install.packages(c('devtools', 'tidyverse', 'magrittr', 'optparse', 'ape', 'foreach', 'jsonlite', 'doParallel'))"
 
 ### install python
 RUN apt-get update && \
@@ -60,6 +59,9 @@ RUN apt-get update && \
 
 ### install GNU awk
 RUN apt-get install -y gawk ssh
+
+### install biomaRT
+RUN R -e "install.packages('BiocManager'); BiocManager::install('biomaRt')"
 
 ENTRYPOINT ["tail", "-f", "/dev/null"]
 
