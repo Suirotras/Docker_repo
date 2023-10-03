@@ -61,7 +61,8 @@ RUN apt-get update && \
 RUN apt-get install -y gawk ssh
 
 ### install biomaRT
-RUN R -e "install.packages('BiocManager'); BiocManager::install('biomaRt')"
+ENV R_LIBS=/usr/lib/container_r_packages
+RUN R -e "install.packages('BiocManager'); BiocManager::install('biomaRt'); BiocManager::install('ggtree')"
 
 ENTRYPOINT ["tail", "-f", "/dev/null"]
 
