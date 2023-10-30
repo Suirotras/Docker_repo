@@ -40,6 +40,7 @@ RUN mkdir /usr/lib/container_r_packages
 ENV R_LIBS=/usr/lib/container_r_packages
 
 ### add R packages
+RUN apt-get update && apt-get upgrade -y && apt-get install -y libmagick++-dev cmake
 RUN R -e "install.packages(c('devtools', 'tidyverse', 'magrittr', 'optparse', 'ape', 'foreach', 'jsonlite', 'doParallel'))"
 
 ### install python
@@ -60,10 +61,11 @@ RUN apt-get update && \
 ### install GNU awk
 RUN apt-get install -y gawk ssh
 
-### install biomaRT, ggtree and modules
+### install bioconducter packages biomaRT, ggtree, Biostrings and GenomicAlignments
 ENV R_LIBS=/usr/lib/container_r_packages
-RUN R -e "install.packages('BiocManager'); BiocManager::install('biomaRt'); BiocManager::install('ggtree')"
-RUN R -e "install.packages('modules')"
+RUN R -e "install.packages('BiocManager'); BiocManager::install('biomaRt'); BiocManager::install('ggtree'); BiocManager::install('Biostrings'); BiocManager::install('GenomicAlignments')"
+### install modules and uniprotR
+RUN R -e "install.packages(c('modules', 'UniprotR'))"
 
 ENTRYPOINT ["tail", "-f", "/dev/null"]
 
