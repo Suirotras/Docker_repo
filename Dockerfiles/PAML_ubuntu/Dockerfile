@@ -83,4 +83,8 @@ RUN git clone https://github.com/abacus-gene/paml.git && \
     # Move the compiled programs to `bin`.
     mv baseml basemlg chi2 codeml evolver infinitesites mcmctree pamp yn00 /bin
 
+### Install latest version of Perl
+RUN apt-get update && \
+    apt-get install -y perl
+
 ENTRYPOINT ["tail", "-f", "/dev/null"]
