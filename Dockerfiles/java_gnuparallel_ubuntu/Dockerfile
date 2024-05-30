@@ -67,5 +67,10 @@ RUN R -e "install.packages('BiocManager'); BiocManager::install('biomaRt'); Bioc
 ### install modules and uniprotR
 RUN R -e "install.packages(c('modules', 'UniprotR'))"
 
+### Install treemmer dependencies
+RUN pip install -U pip && \
+    pip install -U six lxml ete3 joblib matplotlib
+
+
 ENTRYPOINT ["tail", "-f", "/dev/null"]
 
